@@ -1442,6 +1442,10 @@ function renderSignoff(){
         </div>
         <div class="fg"><label>Name</label><input type="text" id="sig-name" placeholder="Full name"></div>
       </div>
+      <div class="fg mb-3">
+        <label>Signing Date</label>
+        <input type="date" id="sig-date" value="${new Date().toISOString().slice(0,10)}">
+      </div>
       <div class="toggle-row mb-2">
         <span class="toggle-label">Declined to sign</span>
         <input type="checkbox" id="sig-declined" onchange="UI.toggleSigDecline()">
@@ -1772,9 +1776,11 @@ const App = {
     const name = document.getElementById('sig-name').value.trim();
     if(!name){ toastMsg('Please enter a name'); return; }
     const declined = document.getElementById('sig-declined').checked;
+    const sigDateVal = document.getElementById('sig-date').value;
+    const sigTimestamp = sigDateVal ? new Date(sigDateVal).toISOString() : londonNow();
     const sig = {
       id:uid(), type:document.getElementById('sig-role').value,
-      name, timestamp:londonNow(), declined,
+      name, timestamp:sigTimestamp, declined,
       declinedReason: declined ? document.getElementById('sig-decline-reason').value.trim() : null,
       data: declined ? null : (sigPad&&!sigPad.isEmpty() ? sigPad.toDataURL() : null)
     };
